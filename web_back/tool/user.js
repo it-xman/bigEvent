@@ -12,7 +12,20 @@ var user = {
       success: options.callback,
     })
   },
-  logout: function () {
-
+  //logout方法是管理用户退出接口的操作方式
+  logout: function (options) {
+    $.ajax({
+      type: 'post',
+      url: USER_LOGOUT,
+      success: options.callback,
+    })
+  },
+  // getInfo方法用来管理用户的简单信息获取接口的操作方式
+  getInfo: function (options) {
+    $.ajax({
+      type: 'get',
+      url: USER_INFO,
+      success: options.callback,
+    })
   }
 };
