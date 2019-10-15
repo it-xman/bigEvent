@@ -22,53 +22,122 @@
   <div class="container-fluid common_con">
     <form class="form-horizontal article_form">
       <div class="form-group">
-        <label for="inputEmail3" class="col-sm-2 control-label">用户名称：</label>
+        <label for="username" class="col-sm-2 control-label">用户名称：</label>
         <div class="col-sm-4">
-          <input type="text" class="form-control" id="inputEmail3" value="李思思">
+          <input type="text" class="form-control" id="username" name="username" value="李思思">
         </div>
       </div>
       <div class="form-group">
-        <label for="inputEmail3" class="col-sm-2 control-label">昵称：</label>
+        <label for="nickname" class="col-sm-2 control-label">昵称：</label>
         <div class="col-sm-4">
-          <input type="text" class="form-control" id="inputEmail3" value="思思">
+          <input type="text" class="form-control" id="nickname" name="nickname" value="思思">
         </div>
       </div>
       <div class="form-group">
-        <label for="inputEmail3" class="col-sm-2 control-label">邮箱：</label>
+        <label for="email" class="col-sm-2 control-label">邮箱：</label>
         <div class="col-sm-4">
-          <input type="text" class="form-control" id="inputEmail3" value="lisisi@126.com">
+          <input type="text" class="form-control" id="email" name="email" value="lisisi@126.com">
         </div>
       </div>
 
       <div class="form-group">
-        <label for="inputPassword3" class="col-sm-2 control-label">用户图标：</label>
+        <label for="user_pic" class="col-sm-2 control-label">用户图标：</label>
         <div class="col-sm-10">
-          <img src="images/2.jpg" alt="" class="user_pic">
-          <input type="file" id="exampleInputFile">
+          <img src="images/2.jpg" alt="" class="user_pic" id="eve">
+          <input type="file" id="user_pic" name="user_pic">
         </div>
       </div>
 
       <div class="form-group">
-        <label for="inputEmail3" class="col-sm-2 control-label">密码：</label>
+        <label for="password" class="col-sm-2 control-label">密码：</label>
         <div class="col-sm-4">
-          <input type="password" class="form-control" id="inputEmail3" value="12345678">
+          <input type="password" class="form-control" id="password" name="password" value="12345678">
         </div>
       </div>
 
 
       <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10">
-          <button type="submit" class="btn btn-success">修改</button>
+          <!--          <button type="submit" class="btn btn-success">修改</button>-->
+          <!--          将type设置为button-->
+          <button type="button" id="change" class="btn btn-success">修改</button>
         </div>
       </div>
     </form>
   </div>
 </div>
 
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">提示信息！</h4>
+      </div>
+      <div class="modal-body">
+        表单尚未填写完毕，请全部填写完毕后再修改
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">确认</button>
+        <!--        <button type="button" class="btn btn-primary" id="confirmLogOut">确认退出</button>-->
+      </div>
+    </div>
+  </div>
+</div>
 
+
+<script src="./js/bootstrap/js/bootstrap.min.js"></script>
+<script src="./tool/config.js"></script>
+<script src="./tool/user.js"></script>
 <script>
-
-
+  // 获取用户信息
+  user.getUserInFo({
+    callback: function (res) {
+      if (res.code === 200) {
+        // 遍历res.data
+        var data = res.data;
+        $.each(data, function (key, val) {
+          // 如果是user_pic，进行单独的src设置，否则同一进行val()进行设置
+          if (key !== 'user_pic') {
+            $('#' + key).val(val);
+          } else {
+            $('#eve').prop('src', val);
+          }
+        })
+      }
+    }
+  });
+  // 点击修改按钮
+  $('#change').on('click', function () {
+    var fd = new FormData($('form')[0]);//传入DOM对象形式的form标签
+    // 获取表单数据，检测是否填写完毕
+    // 观察后发现，文件域如果没有选择文件，size为0，name为''
+    if (
+        fd.get('username').trim() === '' ||
+        fd.get('nickname').trim() === '' ||
+        fd.get('email').trim() === '' ||
+        fd.get('password').trim() === '' ||
+        fd.get('user_pic').size === 0
+    ) {
+      //提示表单没有填写完整，通过模态框进行提示
+      $('#myModal').modal('show');
+    } else {
+      user.changeInfo({
+        data: fd,
+        callback: function (res) {
+          if (res.code === 200) {
+            window.parent.location.href = './login.html';
+          }
+        }
+      });
+    }
+  });
+  // 本地图片预览
+  $('#user_pic').on('change', function () {
+    $('#eve').prop('src', URL.createObjectURL(this.files[0]));
+  })
 </script>
 </body>
 

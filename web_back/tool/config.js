@@ -23,7 +23,7 @@ var COMMENT_SEARCH = BASEURL + 'admin/comment_search';
 var COMMENT_PASS = BASEURL + 'admin/comment_pass';
 var COMMENT_REJECT = BASEURL + 'admin/comment_reject';
 var COMMENT_DEL = BASEURL + 'admin/comment_delete';
-var USERINFO = BASEURL + 'admin/userinfo_get';
+var USERINFOGET = BASEURL + 'admin/userinfo_get';
 var USERINFOEDIT = BASEURL + 'admin/userinfo_edit';
 
 

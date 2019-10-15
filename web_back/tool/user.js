@@ -27,5 +27,24 @@ var user = {
       url: USER_INFO,
       success: options.callback,
     })
+  },
+  // getUserInFo方法用来管理用户详细信息接口的操作方式
+  getUserInFo: function (options) {
+    $.ajax({
+      type: 'get',
+      url: USERINFOGET,
+      success: options.callback,
+    });
+  },
+  // changeInfo方法用来管理用户编辑信息接口的操作方式
+  changeInfo: function (options) {
+    $.ajax({
+      type: 'post',
+      url: USERINFOEDIT,
+      data: options.data,
+      contentType: false,
+      processData: false,
+      success: options.callback,
+    })
   }
 };

@@ -160,7 +160,6 @@
   $('#confirmLogOut').on('click', function () {
     user.logout({
       callback: function (res) {
-        console.log(res);
         if (res.code === 200) {
           location.href = './login.html';
         }
@@ -173,7 +172,6 @@
   */
   user.getInfo({
     callback: function (res) {
-      console.log(res);
       if (res.code === 200) {
         // 将获取的数据渲染到页面中
         var data = res.data;
