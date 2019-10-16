@@ -28,51 +28,51 @@
         <th class="text-center" width="100">操作</th>
       </tr>
       </thead>
-      <tbody>
-      <tr>
-        <td>未分类</td>
-        <td>uncategorized</td>
-        <td class="text-center">
-          <a href="javascript:editTr({&quot;id&quot;:&quot;1&quot;,&quot;slug&quot;:&quot;uncategorized&quot;,&quot;name&quot;:&quot;未分类&quot;});"
-             class="btn btn-info btn-xs">编辑</a>
-          <a href="javascript:deleteTr( 1 );" class="btn btn-danger btn-xs">删除</a>
-        </td>
-      </tr>
+      <tbody id="tbody">
+      <!--      <tr>-->
+      <!--        <td>未分类</td>-->
+      <!--        <td>uncategorized</td>-->
+      <!--        <td class="text-center">-->
+      <!--          <a href="javascript:editTr({&quot;id&quot;:&quot;1&quot;,&quot;slug&quot;:&quot;uncategorized&quot;,&quot;name&quot;:&quot;未分类&quot;});"-->
+      <!--             class="btn btn-info btn-xs">编辑</a>-->
+      <!--          <a href="javascript:deleteTr( 1 );" class="btn btn-danger btn-xs">删除</a>-->
+      <!--        </td>-->
+      <!--      </tr>-->
 
-      <tr>
-        <td>奇趣事</td>
-        <td>funny</td>
-        <td class="text-center">
-          <a href="javascript:editTr({&quot;id&quot;:&quot;2&quot;,&quot;slug&quot;:&quot;funny&quot;,&quot;name&quot;:&quot;奇趣事&quot;});"
-             class="btn btn-info btn-xs">编辑</a>
-          <a href="javascript:deleteTr( 2 );" class="btn btn-danger btn-xs">删除</a>
-        </td>
-      </tr>
+      <!--      <tr>-->
+      <!--        <td>奇趣事</td>-->
+      <!--        <td>funny</td>-->
+      <!--        <td class="text-center">-->
+      <!--          <a href="javascript:editTr({&quot;id&quot;:&quot;2&quot;,&quot;slug&quot;:&quot;funny&quot;,&quot;name&quot;:&quot;奇趣事&quot;});"-->
+      <!--             class="btn btn-info btn-xs">编辑</a>-->
+      <!--          <a href="javascript:deleteTr( 2 );" class="btn btn-danger btn-xs">删除</a>-->
+      <!--        </td>-->
+      <!--      </tr>-->
 
-      <tr>
-        <td>会生活</td>
-        <td>living</td>
-        <td class="text-center">
-          <a href="javascript:editTr({&quot;id&quot;:&quot;3&quot;,&quot;slug&quot;:&quot;living&quot;,&quot;name&quot;:&quot;会生活&quot;});"
-             class="btn btn-info btn-xs">编辑</a>
-          <a href="javascript:deleteTr( 3 );" class="btn btn-danger btn-xs">删除</a>
-        </td>
-      </tr>
+      <!--      <tr>-->
+      <!--        <td>会生活</td>-->
+      <!--        <td>living</td>-->
+      <!--        <td class="text-center">-->
+      <!--          <a href="javascript:editTr({&quot;id&quot;:&quot;3&quot;,&quot;slug&quot;:&quot;living&quot;,&quot;name&quot;:&quot;会生活&quot;});"-->
+      <!--             class="btn btn-info btn-xs">编辑</a>-->
+      <!--          <a href="javascript:deleteTr( 3 );" class="btn btn-danger btn-xs">删除</a>-->
+      <!--        </td>-->
+      <!--      </tr>-->
 
-      <tr>
-        <td>爱旅行</td>
-        <td>travel</td>
-        <td class="text-center">
-          <a href="javascript:editTr({&quot;id&quot;:&quot;4&quot;,&quot;slug&quot;:&quot;travel&quot;,&quot;name&quot;:&quot;爱旅行&quot;});"
-             class="btn btn-info btn-xs">编辑</a>
-          <a href="javascript:deleteTr( 4 );" class="btn btn-danger btn-xs">删除</a>
-        </td>
-      </tr>
+      <!--      <tr>-->
+      <!--        <td>爱旅行</td>-->
+      <!--        <td>travel</td>-->
+      <!--        <td class="text-center">-->
+      <!--          <a href="javascript:editTr({&quot;id&quot;:&quot;4&quot;,&quot;slug&quot;:&quot;travel&quot;,&quot;name&quot;:&quot;爱旅行&quot;});"-->
+      <!--             class="btn btn-info btn-xs">编辑</a>-->
+      <!--          <a href="javascript:deleteTr( 4 );" class="btn btn-danger btn-xs">删除</a>-->
+      <!--        </td>-->
+      <!--      </tr>-->
       </tbody>
       <tfoot>
       <tr>
         <td colspan="3" class="text-center">
-          <a href="#" class="btn btn-success" data-toggle="modal" data-target="#addModal">新增分类</a>
+          <a href="#" id="addNewArticle" class="btn btn-success" data-toggle="modal" data-target="#addModal">新增分类</a>
         </td>
       </tr>
       </tfoot>
@@ -91,44 +91,108 @@
         <form>
           <div class="form-group">
             <label for="recipient-name" class="control-label">分类名称:</label>
-            <input type="text" class="form-control" id="recipient-name">
+            <input type="text" class="form-control" id="cate_name">
           </div>
           <div class="form-group">
             <label for="message-text" class="control-label">分类别名:</label>
-            <input type="text" class="form-control" id="recipient-name">
+            <input type="text" class="form-control" id="cate_slug">
           </div>
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" id="model_shutoff">关闭</button>
+        <button type="button" class="btn btn-default" id="model_shutoff" data-dismiss="modal">关闭</button>
         <button type="button" class="btn btn-primary" id="model_add">新增</button>
+        <button type="button" class="btn btn-primary" id="model_edit" style="display: none;">提交编辑</button>
       </div>
     </div>
   </div>
 </div>
 
+<script src="./tool/config.js"></script>
+<script src="./tool/article.js"></script>
+<script src="./js/art-template.js"></script>
+
+<script type="text/html" id="getArticle">
+  {{each data}}
+  <tr>
+    <td>{{$value.name}}</td>
+    <td>{{$value.slug}}</td>
+    <td class="text-center">
+      <a href="javascript: void (0);" class="btn btn-info btn-xs" id="editA" data-id="{{$value.id}}">编辑</a>
+      <a href="javascript: void (0);" class="btn btn-danger btn-xs" id="delA" data-id="{{$value.id}}">删除</a>
+    </td>
+  </tr>
+  {{/each}}
+</script>
+
 <script>
-  $('#addModal').modal({
-    show: false,
-    backdrop: false
-  });
+  // 调用article对象的获取文章信息方法
+  article.getArticle({
+    callback: function (res) {
+      if (res.code === 200) {
+        // 字符串拼接方法
+        // var str = '';
+        // $.each(res.data, function (index, value) {
+        //   str += ' + \n' +
+        //       '      <tr>\n' +
+        //       '        <td>' + value.name + '</td>\n' +
+        //       '        <td>' + value.slug + '</td>\n' +
+        //       '        <td class="text-center">\n' +
+        //       '          <a href="javascript:;" class="btn btn-info btn-xs">编辑</a>\n' +
+        //       '          <a href="javascript:;" class="btn btn-danger btn-xs">删除</a>\n' +
+        //       '        </td>\n' +
+        //       '      </tr> + '
+        // });
+        // $('#tbody').append(str);
 
-  $('#model_shutoff').click(function () {
-    alert('shutoff');
-    $('#addModal').modal('hide');
-  });
+        // 使用模板引擎方法
+        var str = template('getArticle', res);
+        $('#tbody').append(str);
 
-  $('#model_add').click(function () {
-    alert('add');
-    $('#addModal').modal('hide');
-  });
 
-  $('.category_table').delegate('a', 'click', function () {
-    if ($(this).hasClass('btn-info')) {
-      $('#addModal .modal-title').html('修改分类名称');
-      $('#addModal').modal('show');
+      }
     }
-  })
+  });
+  //分类数据新增功能
+  $('#model_add').on('click', function () {
+    var cata_name = $('#cate_name').val();
+    var cate_slug = $('#cate_slug').val();
+    if (cata_name.trim() === '' || cate_slug.trim() === '') {
+      alert('请将信息填写完整！~');
+    } else {
+      article.addArticle({
+        data: {
+          name: cata_name,
+          slug: cate_slug,
+        },
+        callback: function (res) {
+          if (res.code === 200) {
+            location.reload();
+          } else {
+            alert('填写的内容已存在，请检查后再提交')
+          }
+        }
+      })
+    }
+  });
+  // 表格中编辑按钮功能
+  $('#tbody').on('click', '#editA', function () {
+    $('#addModal').modal('show')
+        .find('h4').html('编辑分类');
+    $('#model_add').hide();
+    $('#model_edit').show();
+    var id = $(this).attr('data-id');
+    console.log(id)
+
+
+  });
+  $('#addNewArticle').on('click', function () {
+    $('#addModal').find('h4').html('新增分类');
+    $('#model_add').show();
+    $('#model_edit').hide();
+  });
+
+
 </script>
 
 </body>
