@@ -28,7 +28,7 @@
         <th class="text-center" width="100">操作</th>
       </tr>
       </thead>
-      <tbody id="tbody">
+      <tbody id="tbody" class="tbody">
       <!--      <tr>-->
       <!--        <td>未分类</td>-->
       <!--        <td>uncategorized</td>-->
@@ -127,7 +127,7 @@
 
 <script>
   // 调用article对象的获取文章信息方法
-  article.getArticle({
+  article.getCate({
     callback: function (res) {
       if (res.code === 200) {
         // 字符串拼接方法
@@ -160,7 +160,7 @@
     if (cata_name.trim() === '' || cate_slug.trim() === '') {
       alert('请将信息填写完整！~');
     } else {
-      article.addArticle({
+      article.addCate({
         data: {
           name: cata_name,
           slug: cate_slug,
@@ -175,24 +175,72 @@
       })
     }
   });
+
   // 表格中编辑按钮功能
+  // 给生成的编辑和删除按钮添加自定义属性data-id给后面找元素使用
   $('#tbody').on('click', '#editA', function () {
+    var id = $(this).attr('data-id');
     $('#addModal').modal('show')
         .find('h4').html('编辑分类');
     $('#model_add').hide();
-    $('#model_edit').show();
-    var id = $(this).attr('data-id');
-    console.log(id)
-
-
+    // 将点击的按钮的data-id的属性赋值给提交编辑按钮
+    $('#model_edit').attr('data-id', id).show();
+    var $tds = $(this).parents('tr').children();
+    $('#cate_name').val($tds.eq(0).text());
+    $('#cate_slug').val($tds.eq(1).text());
   });
+
+  // 点击新增按钮隐藏编辑按钮
   $('#addNewArticle').on('click', function () {
     $('#addModal').find('h4').html('新增分类');
     $('#model_add').show();
     $('#model_edit').hide();
   });
-
-
+  // 点击提交编辑按钮的功能
+  $('#model_edit').on('click', function () {
+    // 获取提交按钮的data-id的值
+    var subId = $(this).attr('data-id');
+    // 获取两个模态框的内容是否为空
+    var name = $('#cate_name').val();
+    var slug = $('#cate_slug').val();
+    if (name.trim() === '' || slug.trim() === '') {
+      alert('请填写完整在提交修改')
+    } else {
+      article.editCate({
+        data: {
+          id: subId,
+          name: name,
+          slug: slug,
+        },
+        callback: function (res) {
+          if (res.code === 200) {
+            location.reload();
+          } else {
+            alert('name和slug不能重复');
+          }
+        }
+      })
+    }
+  });
+  //点击表格里面的删除按钮删除当前分类
+  $('.tbody').on('click', '#delA', function () {
+    var delTr = $(this).parents('tr');
+    if (confirm('确定要删除吗？')) {
+      article.delCate({
+        data: {
+          id: $(this).attr('data-id'),
+        },
+        callback: function (res) {
+          if (res.code === 200) {
+            delTr.remove();
+            // location.reload();
+          } else {
+            alert('删除失败');
+          }
+        }
+      })
+    }
+  })
 </script>
 
 </body>

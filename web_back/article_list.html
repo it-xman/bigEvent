@@ -237,8 +237,10 @@
 
 
       </tbody>
+
     </table>
 
+    <ul id="pagination-demo"></ul>
     <div class="row text-center">
       <ul class="pagination pagination-sm">
         <li class="page-item first disabled"><a href="#" class="page-link">首页</a></li>
@@ -254,9 +256,10 @@
         <li class="page-item last"><a href="#" class="page-link">尾页</a></li>
       </ul>
     </div>
-
   </div>
 </div>
+
+<script src="./js/jquery.twbsPagination.js"></script>
 
 <script>
   // 设置左侧菜单
@@ -264,6 +267,48 @@
     window.parent.setMenu(1, 1);
   })
 </script>
+
+
+<script>
+
+
+  /*
+  分页功能
+    - 进行分页功能设置的时机
+      - 页面初次加载时，请求数据后获取到总页数，进行分页结构创建
+      - 进行了筛选操作之后，请求的数据的总页数有变化，重新生成分页结构
+        - 如果需要重新设置分页结构，旧的分页结构应该删除(排他)
+          - 删除旧的结构：某个元素.twbsPagination('destroy');
+   */
+
+
+  // var totalPages = res.totalPage;
+  $('.pagination').twbsPagination('destroy');
+  $('.pagination').twbsPagination({
+    totalPages: 10000,
+    visiblePages: 7,
+    first: '首页',
+    last: '尾页',
+    prev: '上一页',
+    next: '下一页',
+    onPageClick: function (event, page) {
+      $('#page-content').text('Page ' + page);
+    }
+  })
+
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
 
 </body>
 

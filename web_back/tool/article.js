@@ -1,6 +1,6 @@
 var article = {
   //getArticle方法获取文章类别接口操作方式
-  getArticle: function (options) {
+  getCate: function (options) {
     $.ajax({
       type: 'get',
       url: CATEGORY_SEARCH,
@@ -8,7 +8,7 @@ var article = {
     })
   },
   // addArticle方法添加文章类别接口操作方式
-  addArticle: function (options) {
+  addCate: function (options) {
     $.ajax({
       type: 'post',
       url: CATEGORY_ADD,
@@ -17,17 +17,23 @@ var article = {
     })
   },
   // 编辑分类功能
-  editArticle: function (options) {
+  editCate: function (options) {
     $.ajax({
       type: 'post',
       url: CATEGORY_EDIT,
       data: options.data,
       success: options.callback,
     })
+  },
+  // 删除分类的功能
+  delCate: function (options) {
+    $.ajax({
+      type: 'post',
+      url: CATEGORY_DEL,
+      data: options.data,
+      success: options.callback,
+    })
   }
-
-
-
 
 
 };
