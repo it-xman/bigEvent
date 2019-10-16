@@ -33,7 +33,33 @@ var article = {
       data: options.data,
       success: options.callback,
     })
-  }
+  },
+  //获取文章列表
+  getList: function (options) {
+    $.ajax({
+      type: 'get',
+      url: SEARCH,
+      data: options.data,
+      success: options.callback,
+    })
+  },
+  // setTopOptGet: function (options) {
+  //   $.ajax({
+  //     type: 'get',
+  //     url:,
+  //     data:,
+  //     success:
+  //
+  //   })
+  // },
+  // setTopOptPost: function (options) {
+  //   $.ajax({
+  //     type: 'post',
+  //     url:
+  //     data,
+  //     success: ,
+  // })
+  // },
 
 
 };
