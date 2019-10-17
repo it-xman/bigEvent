@@ -1,4 +1,4 @@
-var article = {
+const article = {
   //getArticle方法获取文章类别接口操作方式
   getCate: function (options) {
     $.ajax({
@@ -43,23 +43,22 @@ var article = {
       success: options.callback,
     })
   },
-  // setTopOptGet: function (options) {
-  //   $.ajax({
-  //     type: 'get',
-  //     url:,
-  //     data:,
-  //     success:
-  //
-  //   })
-  // },
-  // setTopOptPost: function (options) {
+  delOne: function (options) {
+    $.ajax({
+      type: 'get',
+      url: DEL,
+      data: options.data,
+      success: options.callback,
+    })
+  },
+  // editOne: function (options) {
   //   $.ajax({
   //     type: 'post',
-  //     url:
-  //     data,
-  //     success: ,
-  // })
-  // },
+  //     url: EDIT,
+  //     data: options.data,
+  //     success: options.callback,
+  //   })
+  // }
 
 
 };

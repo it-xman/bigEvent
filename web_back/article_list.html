@@ -283,16 +283,153 @@
     <td class="text-center">{{v.date}}</td>
     <td class="text-center">{{v.state}}</td>
     <td class="text-center">
-      <a href="javascript:;" class="btn btn-default btn-xs">编辑</a>
-      <a href="javascript:;" class="btn btn-danger btn-xs">删除</a>
+      <a href="javascript:;" class="btn btn-default btn-xs" id="editL" data-id="{{v.id}}">编辑</a>
+      <a href="javascript:;" class="btn btn-danger btn-xs" id="delL" data-id="{{v.id}}">删除</a>
     </td>
   </tr>
   {{/each}}
 </script>
+
+
 <script type="text/html" id="options">
   {{each data v i}}
   <option value="{{v.id}}">{{v.name}}</option>
   {{/each}}
+</script>
+
+
+<script>
+  // 设置当前的总页数
+  var MytotalPages;
+
+  var MyPage = 1;
+  // 页面一打开获取文章列表信息
+  getPage();
+
+  // 将返回的文章分类信息使用模板引擎创建好后添加到select里
+  article.getCate({
+
+    callback: function (res) {
+
+      if (res.code === 200) {
+
+        var options = template('options', res);
+
+        $('#selCategory').append(options);
+
+      }
+    }
+  });
+
+  // 给筛选按钮添加点击事件获取对应的文章列表信息
+  $('#btnSearch').on('click', function (e) {
+    // 阻止button按钮的默认提交行为
+    e.preventDefault();
+    // 获取文章列表信息
+    getPage();
+
+  });
+
+  // 删除文章列表、
+  $('.tbody').on('click', '#delL', '#editL', function (e) {
+    e.preventDefault();
+    if (confirm('确定要删除该文章吗？')) {
+      article.delOne({
+        data: {
+          id: $(this).attr('data-id'),
+        },
+        callback: function (res) {
+          if (res.code === 200) {
+            location.reload();
+          }
+        }
+      })
+    }
+  });
+
+  // 编辑文章列表
+  // $('.tbody').on('click', '#editL', function (e) {
+  //   e.preventDefault();
+  //   var $tr = $(this).parents('tr');
+  //   var title =  $tr.children('td').eq(0).text();
+  //   var author = $tr.children('td').eq(1).text();
+  //   var type =   $tr.children('td').eq(2).text();
+  //   var date =   $tr.children('td').eq(3).text();
+  //   var state =  $tr.children('td').eq(4).text();
+  //   article.editOne({
+  //     data: {
+  //       id: $(this).attr('data-id'),
+  //       title: title,
+  //
+  //     },
+  //     callback: function (res) {
+  //       if (res.code === 200) {
+  //         console.log(res)
+  //       }
+  //     }
+  //   })
+  // });
+
+
+  function getPage() {
+
+    $('#tbody').html('');
+
+    article.getList({
+
+      data: {
+        type: $('#selCategory').val(),
+        state: $('#selStatus').val(),
+        page: MyPage,
+      },
+
+      callback: function (res) {
+
+        if (res.code === 200) {
+
+          var listStr = template('articleList', res);
+
+          $('#tbody').append(listStr);
+
+          var totalPages = res.totalPage;
+          // console.log(totalPages);
+
+          if (totalPages === MytotalPages) {
+
+
+            return;
+
+          }
+
+          MytotalPages = totalPages;
+          // console.log(MytotalPages);
+
+          $('.pagination').twbsPagination('destroy');
+          $('.pagination').twbsPagination({
+            totalPages: totalPages,
+            initiateStartPageClick: false,
+            visiblePages: 5,
+            first: '首页',
+            last: '尾页',
+            prev: '上一页',
+            next: '下一页',
+            onPageClick: function (event, page) {
+              // console.log(page)
+
+              MyPage = page;
+
+              // console.log(MyPage);
+
+              getPage();
+
+            }
+          });
+        }
+      }
+    });
+  }
+
+
 </script>
 
 
@@ -363,107 +500,106 @@
 <!--</script>-->
 
 
-<script>
-  // 直接获取所有文章列表
-  // article.getList({
-  //   callback: function (res) {
-  //     var listStr = template('articleList', res);
-  //     console.log(res);
-  //     if (res.code === 200) {
-  //       $('#tbody').append(listStr);
-  //     }
-  //   }
-  // });
+<!--<script>-->
+<!--  // // 直接获取所有文章列表-->
+<!--  // // article.getList({-->
+<!--  // //   callback: function (res) {-->
+<!--  // //     var listStr = template('articleList', res);-->
+<!--  // //     console.log(res);-->
+<!--  // //     if (res.code === 200) {-->
+<!--  // //       $('#tbody').append(listStr);-->
+<!--  // //     }-->
+<!--  // //   }-->
+<!--  // // });-->
+<!--  //-->
+<!--  // // 保存当前的页码-->
+<!--  // var MytotalPages;-->
+<!--  //-->
+<!--  // var MyPage = 1;-->
+<!--  //-->
+<!--  //-->
+<!--  // getPage();-->
+<!--  // // 设置顶部的筛选功能-->
+<!--  // article.getCate({-->
+<!--  //   callback: function (res) {-->
+<!--  //     if (res.code === 200) {-->
+<!--  //       var options = template('options', res);-->
+<!--  //       $('#selCategory').append(options);-->
+<!--  //     }-->
+<!--  //   }-->
+<!--  // });-->
+<!--  // //给顶部筛选按钮添加点击事件-->
+<!--  // $('#btnSearch').on('click', function (e) {-->
+<!--  //   e.preventDefault();-->
+<!--  //   getPage();-->
+<!--  //   // article.getList({-->
+<!--  //   //   data: {-->
+<!--  //   //     type: $('#selCategory').val(),-->
+<!--  //   //     state: $('#selStatus').val(),-->
+<!--  //   //   },-->
+<!--  //   //   callback: function (res) {-->
+<!--  //   //     var listStr = template('articleList', res);-->
+<!--  //   //     console.log(res);-->
+<!--  //   //     if (res.code === 200) {-->
+<!--  //   //       totalPage = res.totalPage;-->
+<!--  //   //       $('#tbody').html(listStr);-->
+<!--  //   //         $('.pagination').twbsPagination('destroy');-->
+<!--  //   //         $('.pagination').twbsPagination({-->
+<!--  //   //           totalPages: totalPage,-->
+<!--  //   //           visiblePages: 5,-->
+<!--  //   //           first: '首页',-->
+<!--  //   //           last: '尾页',-->
+<!--  //   //           prev: '上一页',-->
+<!--  //   //           next: '下一页',-->
+<!--  //   //           onPageClick: function (event, page) {-->
+<!--  //   //             $('#page-content').text('Page ' + page);-->
+<!--  //   //           }-->
+<!--  //   //       });-->
+<!--  //   //     }-->
+<!--  //   //   }-->
+<!--  //   // });-->
+<!--  // });-->
+<!--  //-->
+<!--  //-->
+<!--  // function getPage() {-->
+<!--  //   $('#tbody').html('');-->
+<!--  //   article.getList({-->
+<!--  //     data: {-->
+<!--  //       type: $('#selCategory').val(),-->
+<!--  //       state: $('#selStatus').val(),-->
+<!--  //       page: MyPage,-->
+<!--  //     },-->
+<!--  //     callback: function (res) {-->
+<!--  //       if (res.code === 200) {-->
+<!--  //         var listStr = template('articleList', res);-->
+<!--  //         $('#tbody').append(listStr);-->
+<!--  //-->
+<!--  //         var totalPages = res.totalPage;-->
+<!--  //-->
+<!--  //         if (totalPages === MytotalPages) {-->
+<!--  //           return;-->
+<!--  //         }-->
+<!--  //         MytotalPages = totalPages;-->
+<!--  //         $('.pagination').twbsPagination('destroy');-->
+<!--  //         $('.pagination').twbsPagination({-->
+<!--  //           totalPages: totalPages,-->
+<!--  //           visiblePages: 5,-->
+<!--  //           first: '首页',-->
+<!--  //           last: '尾页',-->
+<!--  //           prev: '上一页',-->
+<!--  //           next: '下一页',-->
+<!--  //           onPageClick: function (event, page) {-->
+<!--  //             MyPage = page;-->
+<!--  //             console.log(MyPage);-->
+<!--  //             getPage();-->
+<!--  //           }-->
+<!--  //         });-->
+<!--  //       }-->
+<!--  //     }-->
+<!--  //   });-->
+<!--  // }-->
+<!--</script>-->
 
-  // 保存当前的页码
-  var MytotalPages;
-
-  var MyPage = 1;
-
-
-  getPage();
-  // 设置顶部的筛选功能
-  article.getCate({
-    callback: function (res) {
-      if (res.code === 200) {
-        var options = template('options', res);
-        $('#selCategory').append(options);
-      }
-    }
-  });
-  //给顶部筛选按钮添加点击事件
-  $('#btnSearch').on('click', function (e) {
-    e.preventDefault();
-    getPage();
-    // article.getList({
-    //   data: {
-    //     type: $('#selCategory').val(),
-    //     state: $('#selStatus').val(),
-    //   },
-    //   callback: function (res) {
-    //     var listStr = template('articleList', res);
-    //     console.log(res);
-    //     if (res.code === 200) {
-    //       totalPage = res.totalPage;
-    //       $('#tbody').html(listStr);
-    //         $('.pagination').twbsPagination('destroy');
-    //         $('.pagination').twbsPagination({
-    //           totalPages: totalPage,
-    //           visiblePages: 5,
-    //           first: '首页',
-    //           last: '尾页',
-    //           prev: '上一页',
-    //           next: '下一页',
-    //           onPageClick: function (event, page) {
-    //             $('#page-content').text('Page ' + page);
-    //           }
-    //       });
-    //     }
-    //   }
-    // });
-  });
-
-
-  function getPage() {
-    $('#tbody').html('');
-    article.getList({
-      data: {
-        type: $('#selCategory').val(),
-        state: $('#selStatus').val(),
-        page: MyPage,
-      },
-      callback: function (res) {
-        if (res.code === 200) {
-          var listStr = template('articleList', res);
-          $('#tbody').append(listStr);
-
-          var totalPages = res.totalPage;
-
-          if (totalPages === MytotalPages) {
-            return;
-          }
-          MytotalPages = totalPages;
-
-
-          $('.pagination').twbsPagination('destroy');
-          $('.pagination').twbsPagination({
-            totalPages: totalPages,
-            visiblePages: 5,
-            first: '首页',
-            last: '尾页',
-            prev: '上一页',
-            next: '下一页',
-            onPageClick: function (event, page) {
-              MyPage = page;
-              console.log(MyPage);
-              getPage();
-            }
-          });
-        }
-      }
-    });
-  }
-</script>
 
 <!--  /*-->
 <!--分页功能-->
