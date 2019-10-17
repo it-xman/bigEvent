@@ -55,7 +55,7 @@
         <th class="text-center" width="100">操作</th>
       </tr>
       </thead>
-      <tbody id="tbody">
+      <tbody id="tbody" class="tbody">
 
 
       <!--      <tr>-->
@@ -295,17 +295,93 @@
   {{/each}}
 </script>
 
+
+<!--<script>-->
+
+<!--  var myPage = 1;-->
+<!--  var myTotalPage;-->
+
+<!--  // 获取数据，结构创建显示到页面上-->
+<!--  getArticle();-->
+<!--  // 筛选查询选项添加到options里的功能-->
+<!--  article.getCate({-->
+<!--    callback: function (res) {-->
+<!--      var options = template('options', res);-->
+<!--      $('#selCategory').append(options);-->
+<!--    }-->
+<!--  });-->
+
+<!--  // 点击筛选按钮查询功能-->
+<!--  $('#btnSearch').on('click', function (e) {-->
+<!--    e.preventDefault();-->
+<!--    getArticle();-->
+<!--  });-->
+
+
+<!--  //封装函数，由于刚开始的获取、点击筛选和分页的查询都会用到相同的ajax请求-->
+<!--  function getArticle() {-->
+
+
+<!--    $.ajax({-->
+<!--      url: SEARCH,-->
+<!--      data: {-->
+<!--        type: $('#selCategory').val(),-->
+<!--        state: $('#selStatus').val(),-->
+<!--        page: myPage,-->
+<!--      },-->
+<!--      success: function (res) {-->
+<!--        if (res.code === 200) {-->
+<!--          var trStr = template('articleList', res);-->
+<!--          $('#tbody').html(trStr);-->
+
+<!--          var totalPages = res.totalPage;-->
+
+<!--          if (totalPages === myTotalPage) {-->
+<!--            // - 如果上一次和当前的总页数一致，同时上一次又点击了除1以外的其他页码-->
+<!--            //   - 会导致页码无法更新为1，所以就不进行改进了-->
+<!--            return;-->
+<!--          }-->
+<!--          myTotalPage = totalPages;-->
+
+<!--          $('.pagination').twbsPagination('destroy');-->
+<!--          $('.pagination').twbsPagination({-->
+<!--            totalPages: totalPages,-->
+<!--            visiblePages: 5,-->
+<!--            first: '首页',-->
+<!--            last: '尾页',-->
+<!--            prev: '上一页',-->
+<!--            next: '下一页',-->
+<!--            onPageClick: function (event, page) {-->
+<!--              myPage = page;-->
+<!--              getArticle();-->
+<!--            }-->
+<!--          })-->
+<!--        }-->
+<!--      }-->
+<!--    })-->
+<!--  }-->
+<!--</script>-->
+
+
 <script>
   // 直接获取所有文章列表
-  article.getList({
-    callback: function (res) {
-      var listStr = template('articleList', res);
-      console.log(res);
-      if (res.code === 200) {
-        $('#tbody').append(listStr);
-      }
-    }
-  });
+  // article.getList({
+  //   callback: function (res) {
+  //     var listStr = template('articleList', res);
+  //     console.log(res);
+  //     if (res.code === 200) {
+  //       $('#tbody').append(listStr);
+  //     }
+  //   }
+  // });
+
+  // 保存当前的页码
+  var MytotalPages;
+
+  var MyPage = 1;
+
+
+  getPage();
   // 设置顶部的筛选功能
   article.getCate({
     callback: function (res) {
@@ -317,54 +393,99 @@
   });
   //给顶部筛选按钮添加点击事件
   $('#btnSearch').on('click', function (e) {
-    $('#tbody').html('');
     e.preventDefault();
+    getPage();
+    // article.getList({
+    //   data: {
+    //     type: $('#selCategory').val(),
+    //     state: $('#selStatus').val(),
+    //   },
+    //   callback: function (res) {
+    //     var listStr = template('articleList', res);
+    //     console.log(res);
+    //     if (res.code === 200) {
+    //       totalPage = res.totalPage;
+    //       $('#tbody').html(listStr);
+    //         $('.pagination').twbsPagination('destroy');
+    //         $('.pagination').twbsPagination({
+    //           totalPages: totalPage,
+    //           visiblePages: 5,
+    //           first: '首页',
+    //           last: '尾页',
+    //           prev: '上一页',
+    //           next: '下一页',
+    //           onPageClick: function (event, page) {
+    //             $('#page-content').text('Page ' + page);
+    //           }
+    //       });
+    //     }
+    //   }
+    // });
+  });
+
+
+  function getPage() {
+    $('#tbody').html('');
     article.getList({
       data: {
         type: $('#selCategory').val(),
         state: $('#selStatus').val(),
+        page: MyPage,
       },
       callback: function (res) {
-        var listStr = template('articleList', res);
-        console.log(res);
         if (res.code === 200) {
+          var listStr = template('articleList', res);
           $('#tbody').append(listStr);
+
+          var totalPages = res.totalPage;
+
+          if (totalPages === MytotalPages) {
+            return;
+          }
+          MytotalPages = totalPages;
+
+
+          $('.pagination').twbsPagination('destroy');
+          $('.pagination').twbsPagination({
+            totalPages: totalPages,
+            visiblePages: 5,
+            first: '首页',
+            last: '尾页',
+            prev: '上一页',
+            next: '下一页',
+            onPageClick: function (event, page) {
+              MyPage = page;
+              console.log(MyPage);
+              getPage();
+            }
+          });
         }
       }
     });
-  })
-
-
+  }
 </script>
 
+<!--  /*-->
+<!--分页功能-->
+<!--  - 进行分页功能设置的时机-->
+<!--    - 页面初次加载时，请求数据后获取到总页数，进行分页结构创建-->
+<!--    - 进行了筛选操作之后，请求的数据的总页数有变化，重新生成分页结构-->
+<!--      - 如果需要重新设置分页结构，旧的分页结构应该删除(排他)-->
+<!--        - 删除旧的结构：某个元素.twbsPagination('destroy');-->
+<!-- */-->
 
-<script>
-  /*
-  分页功能
-    - 进行分页功能设置的时机
-      - 页面初次加载时，请求数据后获取到总页数，进行分页结构创建
-      - 进行了筛选操作之后，请求的数据的总页数有变化，重新生成分页结构
-        - 如果需要重新设置分页结构，旧的分页结构应该删除(排他)
-          - 删除旧的结构：某个元素.twbsPagination('destroy');
-   */
-
-
-  // var totalPages = res.totalPage;
-  // $('.pagination').twbsPagination('destroy');
-  // $('.pagination').twbsPagination({
-  //   totalPages: 10000,
-  //   visiblePages: 7,
-  //   first: '首页',
-  //   last: '尾页',
-  //   prev: '上一页',
-  //   next: '下一页',
-  //   onPageClick: function (event, page) {
-  //     $('#page-content').text('Page ' + page);
-  //   }
-  // })
-
-
-</script>
+<!--  //   $('.pagination').twbsPagination('destroy');-->
+<!--  //   $('.pagination').twbsPagination({-->
+<!--  //     totalPages: res.totalPage,-->
+<!--  //     visiblePages: 7,-->
+<!--  //     first: '首页',-->
+<!--  //     last: '尾页',-->
+<!--  //     prev: '上一页',-->
+<!--  //     next: '下一页',-->
+<!--  //     onPageClick: function (event, page) {-->
+<!--  //       $('#page-content').text('Page ' + page);-->
+<!--  //     }-->
+<!--  // })-->
 
 
 </body>
