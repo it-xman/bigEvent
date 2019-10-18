@@ -323,10 +323,13 @@
 
   // 给筛选按钮添加点击事件获取对应的文章列表信息
   $('#btnSearch').on('click', function (e) {
+
     // 阻止button按钮的默认提交行为
     e.preventDefault();
+
     // 获取文章列表信息
     getPage();
+
 
   });
 
@@ -356,6 +359,9 @@
   //   var type =   $tr.children('td').eq(2).text();
   //   var date =   $tr.children('td').eq(3).text();
   //   var state =  $tr.children('td').eq(4).text();
+  //   console.log()
+  //
+  //
   //   article.editOne({
   //     data: {
   //       id: $(this).attr('data-id'),

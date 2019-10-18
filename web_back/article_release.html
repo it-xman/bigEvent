@@ -72,17 +72,34 @@
       </div>
       <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10">
-          <button type="submit" class="btn btn-success">发布</button>
-          <button type="submit" class="btn btn-default">存为草稿</button>
+          <!--          <button type="submit" class="btn btn-success">发布</button>-->
+          <button id="btn" type="button" class="btn btn-success">发布</button>
+          <!--          <button type="submit" class="btn btn-default">存为草稿</button>-->
+          <button type="button" class="btn btn-default">存为草稿</button>
         </div>
       </div>
     </form>
   </div>
 </div>
 
+<script>
+  // 点击发布按钮，获取富文本编辑器的内容
+  $('#btn').on('click', function (e) {
+    e.preventDefault();
+    // 调用富文本编辑器插件提供的方法获取富文本的内容
+    var Ftext = tinyMCE.activeEditor.getContent();
+    console.log(Ftext)
+
+
+
+
+  })
+
+
+</script>
+
+
 </body>
-
-
 
 
 </html>

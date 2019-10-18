@@ -13,7 +13,7 @@
 
 <body>
 <div class="header">
-  <a href="#" class="logo fl"><img src="images/logo.png" alt="logo"></a>
+  <a href="./index.html" class="logo fl"><img src="images/logo.png" alt="logo"></a>
   <div class="search_form fl">
     <input type="text" class="search_txt" placeholder="黑洞照片">
     <button class="search_btn"><i class="fa fa-search"></i></button>
@@ -30,21 +30,21 @@
       <a href="javascript:;" class="level_one"><i class="fa fa-list-ul"></i>全部分类</a>
       <ul class="level_two">
         <li class="up"></li>
-        <li><a href="#">最 新</a></li>
-        <li><a href="#">科 技</a></li>
-        <li><a href="#">股 市</a></li>
-        <li><a href="#">商 品</a></li>
-        <li><a href="#">外 汇</a></li>
-        <li><a href="#">公 司</a></li>
+        <!--        <li><a href="#">最 新</a></li>-->
+        <!--        <li><a href="#">科 技</a></li>-->
+        <!--        <li><a href="#">股 市</a></li>-->
+        <!--        <li><a href="#">商 品</a></li>-->
+        <!--        <li><a href="#">外 汇</a></li>-->
+        <!--        <li><a href="#">公 司</a></li>-->
       </ul>
     </div>
     <ul class="left_menu fl">
-      <li><a href="#">最 新</a></li>
-      <li><a href="#">科 技</a></li>
-      <li><a href="#">股 市</a></li>
-      <li><a href="#">商 品</a></li>
-      <li><a href="#">外 汇</a></li>
-      <li><a href="#">公 司</a></li>
+      <!--      <li><a href="#">最 新</a></li>-->
+      <!--      <li><a href="#">科 技</a></li>-->
+      <!--      <li><a href="#">股 市</a></li>-->
+      <!--      <li><a href="#">商 品</a></li>-->
+      <!--      <li><a href="#">外 汇</a></li>-->
+      <!--      <li><a href="#">公 司</a></li>-->
     </ul>
     <ul class="right_menu fr">
       <li><a href="#">科技专题</a></li>
@@ -228,14 +228,18 @@
 
 <script type="text/html" id="article">
   {{each data v i}}
-  <li{{if i === 0}}'  class="first" '{{/if}}>
-    <a href="#"><img src="{{v.cover}}" alt=""></a>
-    <p>{{v.title}}</p>
+  <li {{if i=== 0}} class="first" {{/if}}>
+  <a href="#"><img src="{{v.cover}}" alt=""></a>
+  <p>{{v.title}}</p>
   </li>
   {{/each}}
 </script>
 
-
+<script type="text/html" id="menuT">
+  {{each data v}}
+  <li><a href="./list.html?id={{v.id}}" id="Name">{{v.name}}</a></li>
+  {{/each}}
+</script>
 
 
 <script>
@@ -245,13 +249,26 @@
     params: {
       perpage: 5,
     }
+  }).then(function (res) {
+    var pStr = template('article', res.data);
+    $('.focus_list').html(pStr);
+  });
+
+  // 完成list和article页面的功能
+  // 请求服务端数据并展示在顶部分类导航位置
+  axios({
+    method: 'get',
+    url: CATEGORY_SEARCH,
+  }).then(function (res) {
+    // console.log(res);
+    var menu = template('menuT', res.data);
+    $('.left_menu').append(menu);
+    $('.level_two').append(menu);
+    //后续跳转到文章列表页，在a跳转的href里填入./list.html?{{v.id}}，跳转到对应的文章页
   })
-      .then(function (res) {
-        res = res.data;
-        console.log(res);
-        var pStr = template('article', res);
-        $('.focus_list').html(pStr);
-      })
+
+
+
 
 </script>
 
