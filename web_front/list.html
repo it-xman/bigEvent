@@ -311,7 +311,6 @@
     url: CATEGORY_SEARCH,
   }).then(function (res) {
     if (res.data.code === 200) {
-      // console.log(res);
       var menu = template('menuT', res.data);
       $('.left_menu').append(menu);
       $('.level_two').append(menu);
@@ -322,7 +321,7 @@
 
   // 获取地址中的id
   var id = location.search.split('=')[1];
-  console.log(id);
+  var type;
   // 检测是否存在id，不存在跳转到index.html
   if (!id) {
     location.href = './index.html'
@@ -332,13 +331,17 @@
       url: SEARCH,
       params: {
         type: id,
-        state: '已发布',
+        state: '已发布'
       }
     }).then(function (res) {
       if (res.data.code === 200) {
-        console.log(res.data);
         var listStr = template('newsL', res.data);
         $('#pagination-demo').before(listStr);
+        type = res.data.data;
+        $.each(type, function (key, value) {
+          type = value.type;
+        })
+
       }
     })
   }

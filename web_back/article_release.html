@@ -23,76 +23,113 @@
     写文章
   </div>
   <div class="container-fluid common_con">
-    <form class="form-horizontal article_form">
+    <form class="form-horizontal article_form" id="form">
       <div class="form-group">
-        <label for="inputEmail3" class="col-sm-2 control-label">文章标题：</label>
+        <label for="title" class="col-sm-2 control-label">文章标题：</label>
         <div class="col-sm-10">
-          <input type="email" class="form-control" id="inputEmail3" placeholder="文章标题">
+          <input type="email" class="form-control" id="title" placeholder="文章标题" name="title">
         </div>
       </div>
       <div class="form-group">
-        <label for="inputPassword3" class="col-sm-2 control-label">文章封面：</label>
+        <label for="cover" class="col-sm-2 control-label">文章封面：</label>
         <div class="col-sm-10">
-          <input type="file" id="exampleInputFile">
+          <input type="file" id="cover" name="cover">
         </div>
       </div>
       <div class="form-group">
-        <label for="inputEmail3" class="col-sm-2 control-label">文章类别：</label>
+        <label for="type" class="col-sm-2 control-label">文章类别：</label>
         <div class="col-sm-4">
-          <select class="form-control">
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
-            <option>5</option>
+          <select class="form-control" id="type" name="T">
+            <!--            调用获取文章分类接口写进去-->
+            <!--            <option>1</option>-->
+            <!--            <option>2</option>-->
+            <!--            <option>3</option>-->
+            <!--            <option>4</option>-->
+            <!--            <option>5</option>-->
           </select>
         </div>
       </div>
       <div class="form-group">
-        <label for="inputEmail3" class="col-sm-2 control-label">发布时间：</label>
+        <label for="date" class="col-sm-2 control-label">发布时间：</label>
         <div class="col-sm-4">
 
           <div class="input-group">
-            <input type="text" class="form-control" placeholder="YYYY-MM-DD" id="dateinput">
+            <input type="text" class="form-control" placeholder="YYYY-MM-DD" id="dateinput" name="date">
             <span class="input-group-btn">
-                                <button class="btn btn-default" type="button"
-                                        onclick="jeDate('#dateinput',{trigger:false,format: 'YYYY-MM-DD'})"><i
-                                        class="iconfont icon-icondate"></i></button>
-                            </span>
+               <button class="btn btn-default" type="button"
+                       onclick="jeDate('#dateinput',{trigger:false,format: 'YYYY-MM-DD'})">
+                 <i class="iconfont icon-icondate"></i>
+               </button>
+            </span>
           </div>
         </div>
       </div>
       <div class="form-group">
-        <label for="inputEmail3" class="col-sm-2 control-label">文章内容：</label>
+        <label for="rich_content" class="col-sm-2 control-label">文章内容：</label>
         <div class="col-sm-10">
-                        <textarea class="form-control" id="rich_content" name="content" placeholder="文章内容">
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda fugiat illo nihil molestias ab. Laborum eius non atque, totam sapiente quae obcaecati assumenda ratione inventore pariatur maiores, qui libero delectus.
-                            </textarea>
+           <textarea class="form-control" id="rich_content" name="content" placeholder="文章内容">
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda fugiat illo nihil molestias ab. Laborum eius non atque, totam sapiente quae obcaecati assumenda ratione inventore pariatur maiores, qui libero delectus.
+           </textarea>
         </div>
       </div>
       <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10">
           <!--          <button type="submit" class="btn btn-success">发布</button>-->
-          <button id="btn" type="button" class="btn btn-success">发布</button>
+          <button id="fb" type="button" class="btn btn-success" >发布</button>
           <!--          <button type="submit" class="btn btn-default">存为草稿</button>-->
-          <button type="button" class="btn btn-default">存为草稿</button>
+          <button id="cg" type="button" class="btn btn-default" name="state">存为草稿</button>
         </div>
       </div>
     </form>
   </div>
 </div>
 
+<script src="./tool/config.js"></script>
+<script src="./tool/article.js"></script>
+<script src="./js/art-template.js"></script>
+<script src="./js/axios.js"></script>
+
+
+<script type="text/html" id="options">
+  {{each data v i}}
+  <option>{{v.name}}</option>
+  {{/each}}
+</script>
+
+
 <script>
+  article.getCate({
+
+    callback: function (res) {
+
+      if (res.code === 200) {
+
+        var options = template('options', res);
+
+        $('#type').append(options);
+
+      }
+    }
+  });
+
   // 点击发布按钮，获取富文本编辑器的内容
-  $('#btn').on('click', function (e) {
+  $('#fb').on('click', function (e) {
     e.preventDefault();
+    axios.post(PUBLISH, {state: '已发布'}).then(function (res) {
+      console.log(res)
+    });
+
+    // 使用formData
+    var fd = new FormData($('#form')[0]);
     // 调用富文本编辑器插件提供的方法获取富文本的内容
     var Ftext = tinyMCE.activeEditor.getContent();
-    console.log(Ftext)
-
-
-
-
+    axios.post(PUBLISH, fd).then(function (res) {
+      if(res.data.code === 201) {
+        parent.location.href = '../web_front/index.html'
+      } else {
+        alert('请检查')
+      }
+    })
   })
 
 

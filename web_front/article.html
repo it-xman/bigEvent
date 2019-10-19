@@ -249,8 +249,20 @@
         var data = res.data.data;
         $('.article_title').text(data.title);
         console.log(data);
-        $('.article_info').text(' ' + data.author + '   发布于 '+ data.date+'   分类: ' + data.type +'阅读:('+ data.read+')   评论: ('+data.comment+')' )
-        $('.article_con').text(data.content)
+         var Type = data.type;
+        if (Type === '1') {
+          Type = '科学'
+        } else if (Type === '2') {
+          Type = '八卦'
+        } else if (Type === '3') {
+          Type = '军事'
+        } else if (Type === '4') {
+          Type = '新闻'
+        } else if (Type === '5') {
+          Type = '奇异'
+        }
+        $('.article_info').text(' ' + data.author + '   发布于 '+ data.date+'   分类: ' + Type   +'阅读:('+ data.read+')   评论: ('+data.comment+')' );
+        $('.article_con').text(data.content);
       }
     });
   }
