@@ -95,6 +95,8 @@
   // 获取用户信息
   user.getUserInFo({
     callback: function (res) {
+      console.log(res)
+
       if (res.code === 200) {
         // 遍历res.data
         var data = res.data;
